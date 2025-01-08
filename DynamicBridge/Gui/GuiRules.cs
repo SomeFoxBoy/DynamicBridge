@@ -11,6 +11,7 @@ using ECommons.Throttlers;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using OtterGui.Widgets;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -78,6 +79,9 @@ namespace DynamicBridge.Gui
                     C.Cond_World,
                     C.Cond_Zone,
                     C.Cond_ZoneGroup,
+                    C.EnableGagSpeak && C.Cond_Gag,
+                    C.EnableGagSpeak && C.Cond_Gag_Multi,
+                    C.EnableGagSpeak && C.Cond_Restraint
                 ];
 
                 List<(Vector2 RowPos, Vector2 ButtonPos, Action BeginDraw, Action AcceptDraw)> MoveCommands = [];
@@ -97,6 +101,12 @@ namespace DynamicBridge.Gui
                     if(C.Cond_Job) ImGui.TableSetupColumn("Job");
                     if(C.Cond_World) ImGui.TableSetupColumn("World");
                     if(C.Cond_Gearset) ImGui.TableSetupColumn("Gearset");
+                    if (C.EnableGagSpeak)
+                    {
+                        if (C.Cond_Gag) ImGui.TableSetupColumn("Gag");
+                        if (C.Cond_Gag_Multi) ImGui.TableSetupColumn("All Gags");
+                        if (C.Cond_Restraint) ImGui.TableSetupColumn("Restraint");
+                    }
                     ImGui.TableSetupColumn("Preset");
                     ImGui.TableSetupColumn(" ", ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.WidthFixed);
                     ImGui.TableHeadersRow();
@@ -513,7 +523,71 @@ namespace DynamicBridge.Gui
                             if(fullList != null) ImGuiEx.Tooltip(UI.AnyNotice + fullList);
                         }
                         filterCnt++;
-
+                        if (C.EnableGagSpeak)
+                        {
+                            if (C.Cond_Gag)
+                            {
+                                ImGui.TableNextColumn();
+                                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                                if (ImGui.BeginCombo("##gagspeakgag", rule.Gags.PrintRange(rule.Not.Gags, out var fullList), C.ComboSize))
+                                {
+                                    FiltersSelection();
+                                    foreach (var name in P.GagSpeakManager.GetGagTypes())
+                                    {
+                                        if (name.IsNullOrEmpty()) continue;
+                                        if (Filters[filterCnt].Length > 0 && !name.Contains(Filters[filterCnt], StringComparison.OrdinalIgnoreCase)) continue;
+                                        if (OnlySelected[filterCnt] && !rule.Gags.ContainsAny(name)) continue;
+                                        DrawSelector(name, name, rule.Gags, rule.Not.Gags);
+                                    }
+                                    ImGui.EndCombo();
+                                }
+                                if (fullList != null) ImGuiEx.Tooltip(UI.AnyNotice + fullList);
+                            }
+                            filterCnt++;
+                            if (C.Cond_Gag_Multi)
+                            {
+                                ImGui.TableNextColumn();
+                                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                                if (ImGui.BeginCombo("##gagspeakgagmulti", rule.MultiGags.PrintRange(rule.Not.MultiGags, out var fullList), C.ComboSize))
+                                {
+                                    FiltersSelection();
+                                    foreach (var name in P.GagSpeakManager.GetGagTypes())
+                                    {
+                                        if (name.IsNullOrEmpty()) continue;
+                                        if (Filters[filterCnt].Length > 0 && !name.Contains(Filters[filterCnt], StringComparison.OrdinalIgnoreCase)) continue;
+                                        if (OnlySelected[filterCnt] && !rule.MultiGags.ContainsAny(name)) continue;
+                                        DrawSelector(name, name, rule.MultiGags, rule.Not.MultiGags);
+                                    }
+                                    ImGui.EndCombo();
+                                }
+                                if (fullList != null) ImGuiEx.Tooltip(UI.AnyNotice + fullList);
+                            }
+                            filterCnt++;
+                            if (C.Cond_Restraint)
+                            {
+                                ImGui.TableNextColumn();
+                                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                                if (ImGui.BeginCombo("##gagspeakrestraint", rule.Restraints.PrintRange(rule.Not.Restraints, out var fullList), C.ComboSize))
+                                {
+                                    FiltersSelection();
+                                    foreach (var cond in P.GagSpeakManager.GetRestraintSets())
+                                    {
+                                        string name = cond.Item1;
+                                        if (name.IsNullOrEmpty()) continue;
+                                        if (Filters[filterCnt].Length > 0 && !name.Contains(Filters[filterCnt], StringComparison.OrdinalIgnoreCase)) continue;
+                                        if (OnlySelected[filterCnt] && !rule.Restraints.ContainsAny(cond.Item2)) continue;
+                                        DrawSelector(name, cond.Item2, rule.Restraints, rule.Not.Restraints);
+                                    }
+                                    ImGui.EndCombo();
+                                }
+                                if (fullList != null) ImGuiEx.Tooltip(UI.AnyNotice + fullList);
+                            }
+                        }
+                        else
+                        {
+                            filterCnt += 2;
+                        }
+                        filterCnt++;
                         ImGui.TableNextColumn();
 
                         {

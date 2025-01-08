@@ -3,6 +3,7 @@ using DynamicBridge.Core;
 using DynamicBridge.Gui;
 using DynamicBridge.IPC;
 using DynamicBridge.IPC.Customize;
+using DynamicBridge.IPC.GagSpeak;
 using DynamicBridge.IPC.Glamourer;
 using DynamicBridge.IPC.Honorific;
 using DynamicBridge.IPC.Moodles;
@@ -53,6 +54,7 @@ public unsafe class DynamicBridge : IDalamudPlugin
     public MoodlesManager MoodlesManager;
     public IpcTester IpcTester;
     public HonorificManager HonorificManager;
+    public GagSpeakManager GagSpeakManager;
 
     public DynamicBridge(IDalamudPluginInterface pi)
     {
@@ -104,6 +106,7 @@ public unsafe class DynamicBridge : IDalamudPlugin
             PenumbraManager = new();
             MoodlesManager = new();
             HonorificManager = new();
+            GagSpeakManager = new();
         });
     }
 
@@ -261,7 +264,14 @@ public unsafe class DynamicBridge : IDalamudPlugin
                     }
                     else
                     {
-                        foreach(var x in profile.Rules)
+                        List<string> wornGags;
+                        if (C.EnableGagSpeak) {
+                            if (C.Cond_Gag || C.Cond_Gag_Multi)
+                            {
+                                wornGags = P.GagSpeakManager.GetWornGags();
+                            }
+                        }
+                        foreach (var x in profile.Rules)
                         {
                             if(
                                 x.Enabled
@@ -298,6 +308,15 @@ public unsafe class DynamicBridge : IDalamudPlugin
                                 &&
                                 (!C.Cond_Gearset || ((x.Gearsets.Count == 0 || x.Gearsets.Contains(RaptureGearsetModule.Instance()->CurrentGearsetIndex))
                                 && (!C.AllowNegativeConditions || !x.Not.Gearsets.Contains(RaptureGearsetModule.Instance()->CurrentGearsetIndex))))
+                                &&
+                                (!C.EnableGagSpeak && C.Cond_Gag || ((x.Gags.Count == 0 || x.Gags.Any((gag1) => P.GagSpeakManager.GetWornGags().Any((gag2) => gag1 == gag2)))
+                                && (!C.AllowNegativeConditions || !x.Not.Gags.Any((gag1) => P.GagSpeakManager.GetWornGags().Any((gag2) => gag1 == gag2)))))
+                                &&
+                                (!C.EnableGagSpeak && C.Cond_Gag_Multi || ((x.MultiGags.Count == 0 || x.MultiGags.All((gag1) => P.GagSpeakManager.GetWornGags().Any((gag2) => gag1 == gag2)))
+                                && (!C.AllowNegativeConditions || x.Not.MultiGags.Count == 0 || !x.Not.MultiGags.All((gag1) => P.GagSpeakManager.GetWornGags().All((gag2) => gag1 == gag2)))))
+                                &&
+                                (!(C.EnableGagSpeak && C.Cond_Restraint) || ((x.Restraints.Count == 0 || (P.GagSpeakManager.GetWornRestraint().HasValue && x.Restraints.Contains(P.GagSpeakManager.GetWornRestraint().Value)))
+                                && (!C.AllowNegativeConditions || P.GagSpeakManager.GetWornRestraint() is null || !x.Not.Restraints.Contains((Guid)P.GagSpeakManager.GetWornRestraint()))))
                                 )
                             {
                                 newRule.Add(x);

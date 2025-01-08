@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Action = System.Action;
 
 namespace DynamicBridge.Gui;
 public static class GuiSettings
@@ -72,7 +73,7 @@ public static class GuiSettings
         if(ImGuiGroup.BeginGroupBox("Configure rule conditions"))
         {
             ImGuiEx.TextWrapped($"Enable extra conditions or disable unused for convenience and performance boost.");
-            ImGuiEx.EzTableColumns("extras", [
+            List<Action> conditions = [
                 () => ImGui.Checkbox($"State", ref C.Cond_State),
                 () => ImGui.Checkbox($"Biome", ref C.Cond_Biome),
                 () => ImGui.Checkbox($"Weather", ref C.Cond_Weather),
@@ -84,8 +85,16 @@ public static class GuiSettings
                 () => ImGui.Checkbox($"Job", ref C.Cond_Job),
                 () => ImGui.Checkbox($"World", ref C.Cond_World),
                 () => ImGui.Checkbox($"Gearset", ref C.Cond_Gearset),
-            ],
-                (int)(ImGui.GetContentRegionAvail().X / 180f), ImGuiTableFlags.BordersInner);
+            ];
+            if (C.EnableGagSpeak)
+            {
+                conditions.Add([
+                    () => ImGui.Checkbox($"Gag", ref C.Cond_Gag),
+                    () => ImGui.Checkbox($"All Gags", ref C.Cond_Gag_Multi),
+                    () => ImGui.Checkbox($"Restraints", ref C.Cond_Restraint),
+                ]);
+            }
+            ImGuiEx.EzTableColumns("extras", [..conditions], (int)(ImGui.GetContentRegionAvail().X / 180f), ImGuiTableFlags.BordersInner);
             ImGuiGroup.EndGroupBox();
         }
 
@@ -146,6 +155,10 @@ public static class GuiSettings
             //moodles
             ImGui.Checkbox("Moodles", ref C.EnableMoodles);
             DrawPluginCheck("Moodles", "1.0.0.15");
+
+            //gagspeak
+            ImGui.Checkbox("GagSpeak", ref C.EnableGagSpeak);
+            DrawPluginCheck("ProjectGagSpeak", "1.2.0.1");
 
             ImGuiGroup.EndGroupBox();
         }

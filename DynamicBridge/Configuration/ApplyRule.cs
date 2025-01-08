@@ -25,6 +25,10 @@ namespace DynamicBridge.Configuration
         public List<ETime> Times = [];
         public List<uint> Worlds = [];
         public List<int> Gearsets = [];
+        // Gagspeak
+        public List<string> Gags = [];
+        public List<string> MultiGags = [];
+        public List<Guid> Restraints = [];
 
         public List<string> SelectedPresets = [];
         public bool Passthrough = false;
@@ -44,6 +48,10 @@ namespace DynamicBridge.Configuration
             public List<ETime> Times = [];
             public List<uint> Worlds = [];
             public List<int> Gearsets = [];
+            // Gagspeak
+            public List<string> Gags = [];
+            public List<string> MultiGags = [];
+            public List<Guid> Restraints = [];
         }
     }
 }

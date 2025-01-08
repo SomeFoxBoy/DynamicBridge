@@ -23,6 +23,7 @@ namespace DynamicBridge.Configuration
         public bool EnableHonorific = true;
         public bool EnablePenumbra = true;
         public bool EnableMoodles = true;
+        public bool EnableGagSpeak = true;
         public GlamourerNoRuleBehavior GlamNoRuleBehaviour = GlamourerNoRuleBehavior.RevertToNormal;
         public bool RevertBeforeAutomationRestore = false;
         public bool RevertGlamourerBeforeApply = false;
@@ -46,6 +47,9 @@ namespace DynamicBridge.Configuration
         public bool Cond_Job = true;
         public bool Cond_World = false;
         public bool Cond_Gearset = false;
+        public bool Cond_Gag = false;
+        public bool Cond_Gag_Multi = false;
+        public bool Cond_Restraint = false;
 
         public Dictionary<ulong, List<GearsetEntry>> GearsetNameCacheCID = [];
 
