@@ -2,11 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Authors>NightmareXIV</Authors>
-        <Version>1.0.7.1</Version>
+        <Version>1.0.7.7</Version>
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>net8.0-windows7.0</TargetFramework>
+        <TargetFramework>net9.0-windows7.0</TargetFramework>
         <Platforms>x64</Platforms>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -29,7 +29,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="2.1.13" />
+        <PackageReference Include="DalamudPackager" Version="12.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -74,6 +74,10 @@
         </Reference>
         <Reference Include="PInvoke.User32">
             <HintPath>$(DalamudLibPath)PInvoke.User32.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="InteropGenerator.Runtime">
+            <HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>
@@ -172,6 +176,9 @@
         <None Update="res\state\1.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="res\state\10.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="res\state\2.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -191,6 +198,9 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="res\state\8.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="res\state\9.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="res\tutorial\1.png">

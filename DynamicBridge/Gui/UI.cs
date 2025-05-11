@@ -51,6 +51,7 @@ public static unsafe class UI
             ("House Registration", HouseReg.Draw, Colors.TabPurple, true),
             ("Profiles", GuiProfiles.Draw, Colors.TabBlue, true),
             ("Characters", GuiCharacters.Draw, Colors.TabBlue, true),
+            ("Other Players", GuiPlayers.Draw, Colors.TabBlue, true),
             ("Settings", GuiSettings.Draw, null, true),
             InternalLog.ImGuiTab(),
             (C.Debug?"Debug":null, Debug.Draw, ImGuiColors.DalamudGrey3, true),
@@ -177,6 +178,6 @@ public static unsafe class UI
         {
             P.ForceUpdate = true;
         }
-        ImGuiEx.Tooltip("Force update your character, reapplying all rules and resets");
+        ImGuiEx.Tooltip("Force update your character, reapplying all rules and presets");
     }
 }

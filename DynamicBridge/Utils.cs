@@ -15,7 +15,7 @@ namespace DynamicBridge
     public static unsafe class Utils
     {
         public const string IconWarning = "\uf071";
-        public static bool IsMoving => P.AgentMapInst->IsPlayerMoving == 1;
+        public static bool IsMoving => P.AgentMapInst->IsPlayerMoving;
         public static bool IsInWater => Player.Available && Player.Object.IsInWater();
         public static ImGuiInputTextFlags CensorFlags => C.NoNames ? ImGuiInputTextFlags.Password : ImGuiInputTextFlags.None;
         public static Vector2 CellPadding => ImGui.GetStyle().CellPadding + new Vector2(0, 2);
@@ -50,7 +50,7 @@ namespace DynamicBridge
 
         public static bool CollectionSelectable<T>(Vector4? color, string label, T value, ICollection<T> collection, bool delayedOperation = false)
         {
-            bool Draw(ref bool x) => ImGuiEx.Selectable(color ?? ImGuiEx.Vector4FromRGB(0xDDDDDD), label, ref x, collection.Contains(value) ? ImGuiTreeNodeFlags.Bullet : ImGuiTreeNodeFlags.Leaf);
+            bool Draw(ref bool x) => ImGuiEx.SelectableNode(color ?? ImGuiEx.Vector4FromRGB(0xDDDDDD), label, ref x, collection.Contains(value) ? ImGuiTreeNodeFlags.Bullet : ImGuiTreeNodeFlags.Leaf);
             return ImGuiEx.CollectionCore(Draw, value, collection, false, delayedOperation);
         }
 

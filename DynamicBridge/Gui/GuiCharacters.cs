@@ -49,6 +49,10 @@ public static class GuiCharacters
                         if(currentProfile == profile && ImGui.IsWindowAppearing()) ImGui.SetScrollHereY();
                         if(ImGui.Selectable($"{profile.CensoredName}##{profile.GUID}", currentProfile == profile))
                         {
+                            if(profile.IsStaticExists() && (currentProfile == null || currentProfile.IsStaticExists()))
+                            {
+                                P.ForceUpdate = true;
+                            }
                             profile.SetCharacter(x.Key);
                         }
                     }
